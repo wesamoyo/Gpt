@@ -3,12 +3,12 @@ import time
 from datetime import datetime
 import pyjokes
 import requests
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import GPT2Tokenizer, TFGPT2LMHeadModel
 
 # Load the GPT-2 tokenizer and model
-model_name = "gpt2"
-tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-model = GPT2LMHeadModel.from_pretrained(model_name)
+model_path = "Gpt"
+tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+model = TFGPT2LMHeadModel.from_pretrained(model_path)
 
 # Set page configuration with title and icon
 st.set_page_config(
@@ -43,7 +43,7 @@ if prompt := st.chat_input():
         with st.spinner("Generating response..."):
             try:
                 # Tokenize user input
-                input_ids = tokenizer.encode(prompt, return_tensors="pt")
+                input_ids = tokenizer.encode(prompt, return_tensors="tf")
 
                 # Generate response using the Transformers model
                 output_ids = model.generate(
