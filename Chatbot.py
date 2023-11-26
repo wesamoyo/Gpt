@@ -1,9 +1,9 @@
 import streamlit as st
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import torch
 import time
 from datetime import datetime
 import pyjokes
-import wikipedia
 import requests
 
 # Load pre-trained GPT-2 model and tokenizer from raw GitHub URL
@@ -183,22 +183,15 @@ if prompt := st.chat_input():
         # Display immediate result
         st.write(response)
     else:
-        with st.spinner("Fetching information..."):
+        with st.spinner("Generating response..."):
             try:
-                time.sleep(2)
                 # Use the GPT-2 model for generating responses
                 inputs = tokenizer(prompt, return_tensors="pt")
                 outputs = model.generate(**inputs, max_length=250, num_beams=5, no_repeat_ngram_size=2)
                 generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-                st.markdown(generated_text, unsafe_allow_html=True)
+                st.chat_message("Hound").write(generated_text)
             except Exception as e:
                 content = f"Error: {str(e)}"
-                st.markdown(content)
-
-        # If no specific response, check for a generic response
-        if not response:
-            response = "I'm here to assist you. If you have any specific questions or tasks, feel free to let me know!"
-
-        st.chat_message("Hound").write(response)
+                st.write(content)
 
 st.session_state["new_chat_button"] = new_chat_button
