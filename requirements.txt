@@ -6,5 +6,5 @@ streamlit-feedback
 pyjokes
 requests
 geocoder
-tensorflow
+torch
 transformers
