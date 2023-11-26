@@ -1,7 +1,7 @@
 import streamlit as st
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-# Load pre-trained GPT-2 model and tokenizer
+# Load pre-trained GPT-2 model and tokenizer for PyTorch
 model_name = 'gpt2'  # You can replace this with the name of the GPT-2 model you want to use
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
@@ -23,7 +23,7 @@ if prompt := st.chat_input():
         response = f"Sure, here's a joke for you: {joke}."
     else:
         with st.spinner("Generating response..."):
-            # Generate response using the GPT-2 model
+            # Generate response using the GPT-2 model for PyTorch
             input_ids = tokenizer.encode(prompt, return_tensors="pt")
             output = model.generate(input_ids, max_length=100, num_beams=5, no_repeat_ngram_size=2, top_k=50, top_p=0.95, temperature=0.7)
             generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
