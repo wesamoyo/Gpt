@@ -1,9 +1,17 @@
 import streamlit as st
-import time
 from datetime import datetime
 import pyjokes
-import wikipedia
 import requests
+import tensorflow as tf
+from transformers import GPT2Tokenizer
+
+# Load the GPT-2 tokenizer
+model_name = "gpt2"  # or replace with the name of your specific GPT model
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+
+# Load the TensorFlow model
+model_path = "./tf_model.h5"  # replace with the actual path to your model file
+model = tf.keras.models.load_model(model_path)
 
 # Set page configuration with title and icon
 st.set_page_config(
@@ -177,22 +185,19 @@ if prompt := st.chat_input():
         # Display immediate result
         st.write(response)
     else:
-        with st.spinner("Fetching information..."):
+        with st.spinner("Generating response..."):
             try:
-                time.sleep(2)
-                page = wikipedia.page(prompt)
-                content = page.content
+                # Tokenize user input
+                input_ids = tokenizer.encode(prompt, return_tensors="tf")
 
-                # Display only the first 800 characters of the content
-                truncated_content = content[:800]
+                # Generate response using the TensorFlow model
+                output_ids = model.generate(input_ids, max_length=100, num_beams=5, no_repeat_ngram_size=2, top_k=50, top_p=0.95, temperature=0.7)
 
-                st.markdown(truncated_content, unsafe_allow_html=True)
-            except wikipedia.exceptions.DisambiguationError as e:
-                content = f"Ambiguous query. Please be more specific. Options: {', '.join(e.options)}"
-                st.markdown(content)
-            except wikipedia.exceptions.PageError:
-                content = "Sorry, I couldn't find information on that topic."
-                st.markdown(content)
+                # Decode and display the generated response
+                generated_response = tokenizer.decode(output_ids[0], skip_special_tokens=True)
+                st.write(f"Response: {generated_response}")
+            except Exception as e:
+                st.write(f"Error generating response: {str(e)}")
 
         # If no specific response, check for a generic response
         if not response:
