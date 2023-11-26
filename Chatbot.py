@@ -1,26 +1,17 @@
 import streamlit as st
-import requests
 from datetime import datetime
 import pyjokes
-import tensorflow as tf
+import requests
 from transformers import GPT2Tokenizer
+from tensorflow.keras.models import load_model
 
 # Load the GPT-2 tokenizer
 model_name = "gpt2"
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
-# Specify the URL for the TensorFlow model
-model_url = "https://github.com/wesamoyo/Gpt/raw/main/tf_model.h5"
-model_local_path = "tf_model.h5"
-
-# Download the model locally
-with st.spinner("Downloading model..."):
-    response = requests.get(model_url)
-    with open(model_local_path, 'wb') as model_file:
-        model_file.write(response.content)
-
-# Load the TensorFlow model
-model = tf.keras.models.load_model(model_local_path)
+# Load the TensorFlow model from the local path
+model_local_path = "Gpt/tf_model.h5"
+model = load_model(model_local_path)
 
 # Set page configuration with title and icon
 st.set_page_config(
