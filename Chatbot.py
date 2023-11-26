@@ -1,19 +1,17 @@
 import streamlit as st
-import time
-from datetime import datetime
-import pyjokes
-import requests
 from transformers import GPT2Tokenizer, TFGPT2LMHeadModel
 
-# Load the GPT-2 tokenizer and model
-model_path = "Gpt"
-tokenizer = GPT2Tokenizer.from_pretrained(model_path)
-model = TFGPT2LMHeadModel.from_pretrained(model_path)
+# Define the GitHub repository name
+repo_name = "wesamoyo/Gpt"  # Replace with your GitHub username
+
+# Load the GPT-2 tokenizer and model from the GitHub repository
+tokenizer = GPT2Tokenizer.from_pretrained(repo_name)
+model = TFGPT2LMHeadModel.from_pretrained(repo_name)
 
 # Set page configuration with title and icon
 st.set_page_config(
     page_title="HoundAI",
-    page_icon="e9f83341-9417-4910-887f-e865c6d3e876.jpeg",
+    page_icon="path-to-your-icon/e9f83341-9417-4910-887f-e865c6d3e876.jpeg",  # Replace with your icon path
     layout="centered",
     initial_sidebar_state="collapsed"
 )
