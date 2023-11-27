@@ -1,10 +1,9 @@
 import streamlit as st
-from transformers import GPT2Tokenizer, TFGPT2Model
-import tensorflow as tf
+from transformers import pipeline
 
-# Load GPT-2 tokenizer and model
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-model = TFGPT2Model.from_pretrained("gpt2")
+# Set up the Inference API pipeline with your API key
+api_key = "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"  # Replace with your actual API key
+generator = pipeline('text-generation', model=f'gpt2/{api_key}')
 
 # Streamlit app
 st.title("GPT-2 Streamlit App")
@@ -14,14 +13,8 @@ user_input = st.text_input("Enter text:")
 
 # Generate response using GPT-2
 if user_input:
-    # Tokenize and convert to tensor
-    inputs = tokenizer(user_input, return_tensors="tf")
-    
-    # Generate output
-    output = model.generate(**inputs)
-    
-    # Decode and display response
-    response = tokenizer.decode(output[0], skip_special_tokens=True)
+    response = generator(user_input, max_length=100, num_return_sequences=1)[0]['generated_text']
     st.write("GPT-2 Response:", response)
+
 
 
